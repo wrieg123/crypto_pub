@@ -42,6 +42,7 @@ If a price gets zeroed out or the top of book changes, the tree will rebalance i
 
 For bids, a sample impmlementation may look like:
 
-![order_book_bids](https://user-images.githubusercontent.com/61852120/169717978-a4364769-73c5-4e28-b769-ad7242e67318.PNG)..
+![order_book_bids](https://user-images.githubusercontent.com/61852120/169717978-a4364769-73c5-4e28-b769-ad7242e67318.PNG)
+
 Each of the bid nodes (27999, 28000, and 28001) is mapped from the price level to a node pointer in an unordered map specific to the bids. Additionally, there is a pointer to the 28,000 node which is the current best bid. The next pointer always points to the price in the better direction (e.g. 28,001, or higher, if it gets an order will become next bid)
 
