@@ -11,11 +11,11 @@ Outline:
 * [ETL](#etl) - ETL description(s); data recording, coin updates, etc.
 
 ## Current Progress
-2022-05-22 - Implemented OrderBook finance object to manage local LOB representation 
-2022-05-20 - Wrote FTX specific parser for trades, top\_of\_book, and order book updates
-2022-05-10 - Added additional exchange support and re-wrote general websocket connector
-2022-05-05 - Expanded exchanges to record (as of writing this includes: Binance, Binance-US, FTX, FTX-US, Mango, and DYDX)
-2022-04-27 - First implementation of websocket connector and a file writer class; began exchange data message recordings
+* 2022-05-22 - Implemented OrderBook finance object to manage local LOB representation 
+* 2022-05-20 - Wrote FTX specific parser for trades, top\_of\_book, and order book updates
+* 2022-05-10 - Added additional exchange support and re-wrote general websocket connector
+* 2022-05-05 - Expanded exchanges to record (as of writing this includes: Binance, Binance-US, FTX, FTX-US, Mango, and DYDX)
+* 2022-04-27 - First implementation of websocket connector and a file writer class; began exchange data message recordings
 
 ## System Design
 ![SystemDiagram1](https://user-images.githubusercontent.com/61852120/166719907-06c56249-222e-4eda-9e9e-b58a29e668eb.PNG)
