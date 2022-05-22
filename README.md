@@ -40,7 +40,7 @@ My implementation of the limit order book lives in [finance/order\_book.hpp](fin
 In theory, this implementation is "self-balancing" in that the pointer, head, node is the current best bid or offer. By moving in the "next" direction the price improves and moving the "prev" direction the price gets worse. Therefore, by starting any search at the top of book the average cost hopefully is n/2 (rather than the worst case of O(n). 
 If a price gets zeroed out or the top of book changes, the tree will rebalance itself to adjust the pointer to the new top of book node.
 
-For bids, a sample impmlementation may look like:
+For bids, a sample implementation may look like:
 
 ![order_book_bids](https://user-images.githubusercontent.com/61852120/169717978-a4364769-73c5-4e28-b769-ad7242e67318.PNG)
 
