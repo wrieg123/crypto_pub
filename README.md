@@ -53,7 +53,11 @@ You do have the oppotion to pre-cache the nodes in the unordered_map on construc
 ### Market Data Recording Services
 As mentioned in [System Design](#system-design), one implementation of the lambda callback is to write lines to a flat file. To create a robust backtesting and research framework, I record raw messages from the exchanges to replay the events of the day as they happened. As each message comes in, it logs the message in the flat file with the following format: millisecond timestamp|payload|size of message. 
 
-For each exchange, I have a C++ script that is configurable through args to adjust things like endpoint and whether to apply to spot or perpetual futures data. In the production branch (maintained in a separate directory), there is a linux service that runs in the background that points to each of the compiled C++ scripts mentioned above. Within the service script, it also manages the directory structure of *exchange/product_type/recording_type/YYYYMMDD/recording_type_timestamp.txt*. The linux service is deployed with a three-second error delay so that if the socket connection goes down it will allow a small amount of time before trying to re-engage the connection. At midnight UTC, I restart all of the active services which triggers a bash script to create a new YYYYMMDD sub-directory. Following the restart, a script also runs to gzip the prior day's raw text file.
+For each exchange, I have a C++ script that is configurable through args to adjust things like endpoint and whether to apply to spot or perpetual futures data. In the production branch (maintained in a separate directory), there is a linux service that runs in the background that points to each of the compiled C++ scripts mentioned above. Within the service script, it also manages the directory structure of *exchange/product_type/recording_type/YYYYMMDD/recording_type_timestamp.txt*. 
+
+The linux service is deployed with a three-second error delay so that if the socket connection goes down it will allow a small amount of time before trying to retry the connection. Each time the service restarts a new out file is created with a timestamp to denote the start time.
+
+At midnight UTC, I restart all of the active services which triggers a bash script to create a new YYYYMMDD sub-directory. Following the restart, a script also runs to gzip the prior day's raw text files.
 
 At the moment I support the following exchanges for spot (and perps where applicable):
 * Binance - depth snapshots, top of book, fills
