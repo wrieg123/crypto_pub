@@ -44,5 +44,23 @@ For bids, a sample implementation may look like:
 
 ![order_book_bids](https://user-images.githubusercontent.com/61852120/169717978-a4364769-73c5-4e28-b769-ad7242e67318.PNG)
 
-Each of the bid nodes (27999, 28000, and 28001) is mapped from the price level to a node pointer in an unordered map specific to the bids. Additionally, there is a pointer to the 28,000 node which is the current best bid. The next pointer always points to the price in the better direction (e.g. 28,001, or higher, if it gets an order will become next bid)
+Each of the bid nodes (27999, 28000, and 28001) is mapped from the price level to a pointer to a PriceNode in an unordered map specific to the bids. Additionally, there is a pointer to the 28,000 node which is the current best bid. The next pointer always points to the price in the better direction (e.g. 28,001, or higher, if it gets an order will become next bid) and the prev pointer points in the opposite direction.
+
+You do have the oppotion to pre-cache the nodes in the unordered_map on construction of the OrderBook object which results in a substantial speed improvement. Over 1,000 tests of 100 orderbook updates (50 bids, 50 offers) the pre-cached version takes about 20 microseconds on average to perform all of the updates (compared to 80 microseconds for creating a new-node each time).
+
+
+## ETL
+### Market Data Recording Services
+As mentioned in [System Design](#system-design), one implementation of the lambda callback is to write lines to a flat file. To create a robust backtesting and research framework, I record raw messages from the exchanges to replay the events of the day as they happened. As each message comes in, it logs the message in the flat file with the following format: millisecond timestamp|payload|size of message. 
+
+For each exchange, I have a C++ script that is configurable through args to adjust things like endpoint and whether to apply to spot or perpetual futures data. In the production branch (maintained in a separate directory), there is a linux service that runs in the background that points to each of the compiled C++ scripts mentioned above. Within the service script, it also manages the directory structure of *exchange/product_type/recording_type/YYYYMMDD/recording_type_timestamp.txt*. The linux service is deployed with a three-second error delay so that if the socket connection goes down it will allow a small amount of time before trying to re-engage the connection. At midnight UTC, I restart all of the active services which triggers a bash script to create a new YYYYMMDD sub-directory. Following the restart, a script also runs to gzip the prior day's raw text file.
+
+At the moment I support the following exchanges for spot (and perps where applicable):
+* Binance - depth snapshots, top of book, fills
+* Binance-US - depth snapshots, top of book, fills
+* Coinbase - fills
+* DYDX - top of book, fills
+* FTX - depth snapshots, top of book, fills
+* FTX-US - depth snapshots, top of book, fills
+* Mango - top of book, fills
 
