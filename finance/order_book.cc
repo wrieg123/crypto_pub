@@ -1,4 +1,4 @@
-#include <order_book.hpp>
+#include <terminus/finance/order_book.hpp>
 #include <iostream>
 
 namespace finance {
@@ -76,11 +76,11 @@ double OrderBook::get_best_offer_size() {
     return -1;
 }
 
-PriceNode& OrderBook::get_best_bid_node() {
-    return *m_best_bid_node;
+PriceNode* OrderBook::get_best_bid_node() {
+    return m_best_bid_node;
 }
-PriceNode& OrderBook::get_best_offer_node() {
-    return *m_best_offer_node;
+PriceNode* OrderBook::get_best_offer_node() {
+    return m_best_offer_node;
 }
 
 std::vector<std::vector<double>> OrderBook::get_bids(int levels) {
@@ -133,18 +133,15 @@ void OrderBook::update_bid(double price, double size) {
             node->n_orders = 0;
             // need to update the bid next
             if (node == m_best_bid_node) {
-                int tmp = 0;
                 PriceNode* temp = node->prev;
                 while(temp) {
                     if (temp->size > 0) {
                         m_best_bid_node = temp;
-                        tmp = temp->size;
                         break;
                     } else {
                         temp = temp->prev;
                     }
                 }
-                //if (tmp == 0) m_best_bid_node = nullptr; // pretty much book is one-sided, will just leave stale price for node consistency
             }
         } else {
             if (size > node->size) {
@@ -174,18 +171,15 @@ void OrderBook::update_offer(double price, double size) {
             node->n_orders = 0;
             // need to update the offer next
             if (node == m_best_offer_node) {
-                int tmp = 0;
                 PriceNode* temp = node->prev;
                 while(temp) {
                     if (temp->size > 0) {
                         m_best_offer_node = temp;
-                        tmp = temp->size;
                         break;
                     } else {
                         temp = temp->prev;
                     }
                 }
-                //if (tmp == 0) m_best_offer_node = nullptr; // pretty much book is one-sided, will just leave stale price for node consistency
             }
         } else {
             if (size > node->size) {
@@ -201,6 +195,13 @@ void OrderBook::update_offer(double price, double size) {
         }
         node->size = size;
     }
+}
+
+void OrderBook::clear_book() {
+    m_bids.clear();
+    m_offers.clear();
+    m_best_bid_node = nullptr;
+    m_best_offer_node = nullptr;
 }
 
 void OrderBook::insert_bid_node(PriceNode* node) {
@@ -220,8 +221,8 @@ void OrderBook::insert_bid_node(PriceNode* node) {
             prev = m_best_bid_node->prev;
             next = m_best_bid_node;
             while(prev && prev->price > node->price) {
-                prev = prev->prev;
                 next = prev;
+                prev = prev->prev;
             }
         }
 
@@ -251,8 +252,8 @@ void OrderBook::insert_offer_node(PriceNode* node) {
             prev = m_best_offer_node->prev;
             next = m_best_offer_node;
             while(prev && prev->price < node->price) {
-                prev = prev->prev;
                 next = prev;
+                prev = prev->prev;
             }
         }
         if(prev) prev->next = node;

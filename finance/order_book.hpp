@@ -55,13 +55,14 @@ public:
     double get_best_bid_size(); //  get best bid size
     double get_best_offer_size(); // get best offer size
 
-    PriceNode& get_best_bid_node();
-    PriceNode& get_best_offer_node();
+    PriceNode* get_best_bid_node();
+    PriceNode* get_best_offer_node();
     PriceNode* get_bid_node_at_level(double level);
     PriceNode* get_offer_node_at_level(double level);
 
     void update_bid(double price, double size);
     void update_offer(double price, double size);
+    void clear_book();
 
     std::vector<std::vector<double>> get_bids(int levels); // -1 = all levels, 0 = just top of book
     std::vector<std::vector<double>> get_offers(int levels); // -1 = all levels, 0 = just top of book
