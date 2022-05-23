@@ -43,8 +43,8 @@ typedef struct PriceNode {
 
 class OrderBook {
 public:
-    OrderBook(int n_levels_to_keep, double tick_size, double min, double max);
-    OrderBook(int n_levels_to_keep, double tick_size);
+    OrderBook(double tick_size, double min, double max);
+    OrderBook(double tick_size);
     //~OrderBook();
 
     double get_mid(); // get mid price (bid + offer) / 2;
@@ -63,8 +63,8 @@ public:
     void update_bid(double price, double size);
     void update_offer(double price, double size);
 
-    std::vector<std::vector<double>> get_bids(int levels, int actionable_only); // returns all bids kept (by reference)
-    std::vector<std::vector<double>> get_offers(int levels, int actionable_only); // returns all bids kept (by reference)
+    std::vector<std::vector<double>> get_bids(int levels); // -1 = all levels, 0 = just top of book
+    std::vector<std::vector<double>> get_offers(int levels); // -1 = all levels, 0 = just top of book
     
 private:
     PriceNode* m_best_bid_node = nullptr; // node for top of book
@@ -74,9 +74,9 @@ private:
     std::unordered_map<double, PriceNode*> m_bids; // {px : PriceNode* } if it exists
     std::unordered_map<double, PriceNode*> m_offers; 
 
-    int m_n_levels_to_keep; // when to clip the book (e.g. not keep all levels, default = 10; -1 is keep all)
     double m_tick_size;
 
+    void get_levels(int &levels, std::vector<std::vector<double>>&, PriceNode*);
     void insert_bid_node(PriceNode* bid);
     void insert_offer_node(PriceNode* offer);
 

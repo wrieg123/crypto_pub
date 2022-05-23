@@ -6,8 +6,7 @@ namespace finance {
 PriceNode::PriceNode(double price, double size) : price(price), size(size), n_orders(1) { };
 PriceNode::PriceNode(double price) : price(price), size(0), n_orders(0) { };
 
-OrderBook::OrderBook(int n_levels_to_keep, double tick_size, double min, double max) :
-m_n_levels_to_keep(n_levels_to_keep), m_tick_size(tick_size) {
+OrderBook::OrderBook(double tick_size, double min, double max) : m_tick_size(tick_size) {
     // constructor to pre-queue a bunch of nodes
     PriceNode* prev_bid = nullptr; // price is lower
     PriceNode* next_offer = nullptr; // for this the price will be higher
@@ -36,8 +35,7 @@ m_n_levels_to_keep(n_levels_to_keep), m_tick_size(tick_size) {
     }
 
 };
-OrderBook::OrderBook(int n_levels_to_keep, double tick_size) : 
-m_n_levels_to_keep(n_levels_to_keep), m_tick_size(tick_size) {};
+OrderBook::OrderBook(double tick_size) : m_tick_size(tick_size) {};
 
 double OrderBook::get_mid() {
     if(m_best_bid_node != nullptr && m_best_offer_node != nullptr) {
@@ -83,6 +81,42 @@ PriceNode& OrderBook::get_best_bid_node() {
 }
 PriceNode& OrderBook::get_best_offer_node() {
     return *m_best_offer_node;
+}
+
+std::vector<std::vector<double>> OrderBook::get_bids(int levels) {
+    std::vector<std::vector<double>> bids;
+
+    get_levels(levels, bids, m_best_bid_node);
+
+    return bids;
+}
+std::vector<std::vector<double>> OrderBook::get_offers(int levels) {
+    std::vector<std::vector<double>> offers;
+
+    get_levels(levels, offers, m_best_offer_node);
+
+    return offers;
+}
+
+void OrderBook::get_levels(int &levels, std::vector<std::vector<double>> &v, PriceNode* ptr) {
+    std::vector<double> temp(2,0);
+    if (levels != -1) {
+        int i = 0;
+        while(i <= levels && ptr) {
+            temp[0] = ptr->price; 
+            temp[1] = ptr->size;
+            v.push_back(temp);
+            ptr = ptr->prev;
+            i++;
+        }
+    } else {
+        while(ptr) {
+            temp[0] = ptr->price; 
+            temp[1] = ptr->size;
+            v.push_back(temp);
+            ptr = ptr->prev;
+        }
+    }
 }
 
 
@@ -233,7 +267,6 @@ void OrderBook::insert_offer_node(PriceNode* node) {
     }
     m_offers.emplace(node->price, node);
 }
-
 
 
 }
