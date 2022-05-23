@@ -14,7 +14,7 @@ Outline:
 * 2022-05-22 - Implemented OrderBook finance object to manage local LOB representation 
 * 2022-05-20 - Wrote FTX specific parser for trades, top\_of\_book, and order book updates
 * 2022-05-10 - Added additional exchange support and re-wrote general websocket connector
-* 2022-05-05 - Expanded exchanges to record (as of writing this includes: Binance, Binance-US, FTX, FTX-US, Mango, and DYDX)
+* 2022-05-05 - Expanded exchanges to record data from; unzipped produce ~150GB a day
 * 2022-04-27 - First implementation of websocket connector and a file writer class; began exchange data message recordings
 
 ## System Design
