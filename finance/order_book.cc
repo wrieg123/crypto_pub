@@ -217,7 +217,6 @@ void OrderBook::insert_bid_node(PriceNode* node) {
                 next = next->next;
             }
         } else {
-            // walk the prev prices until you find the GGGG spot
             prev = m_best_bid_node->prev;
             next = m_best_bid_node;
             while(prev && prev->price > node->price) {
