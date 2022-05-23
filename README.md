@@ -1,4 +1,4 @@
-# Public Documentation of my Crypto Trading System
+# Public Documentation of My Crypto Trading System
 ## Overview
 This repository is to outline my efforts for designing a crypto HFT system written predominantly in C++. While the majority of the code is kept in a private repository, I am including code-samples here to outline specific challenges I faced while building the system. I will keep this document up to date as I implement new components.
 
