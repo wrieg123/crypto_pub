@@ -150,7 +150,7 @@ void OrderBook::update_bid(double price, double size) {
                 node->n_orders--;
             }
             if(m_best_bid_node) {
-                if (node->price > m_best_bid_node->price) m_best_bid_node = node;
+                if (node->price > m_best_bid_node->price && node->size > 0) m_best_bid_node = node;
             } else {
                 m_best_bid_node = node;
             }
@@ -188,7 +188,7 @@ void OrderBook::update_offer(double price, double size) {
                 node->n_orders--;
             }
             if(m_best_offer_node) {
-                if (node->price < m_best_offer_node->price) m_best_offer_node = node;
+                if (node->price < m_best_offer_node->price && node->size > 0) m_best_offer_node = node;
             } else {
                 m_best_offer_node = node;
             }
