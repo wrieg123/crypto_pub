@@ -11,6 +11,7 @@ Outline:
 * [ETL](#etl) - ETL description(s); data recording, coin updates, etc.
 
 ## Current Progress
+* 2022-06-07 - Created WS connection object for sending orders/receiving fills, event-driven features class and corresponding strategy base class
 * 2022-05-22 - Implemented OrderBook finance object to manage local LOB representation 
 * 2022-05-20 - Wrote FTX specific parser for trades, top\_of\_book, and order book updates
 * 2022-05-10 - Added additional exchange support and re-wrote general websocket connector
